@@ -43,7 +43,9 @@ function List() {
 	}, [])
 
 	useEffect(() => {
-		if (listOfCities.length < (page * 5) && (page - 1 > 0)) setPage(page - 1)
+		if (
+			(listOfCities.length < (page * 5)) &&
+			(listOfCities.length < ((page - 1) * 5)) && (page - 1 > 0)) setPage(page - 1)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [listOfCities.length])
 
