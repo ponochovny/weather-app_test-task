@@ -5,7 +5,7 @@ import './index.scss'
 
 function AddCoordinatesForm() {
 	const [formData, setFormData] = useState({ lon: 0, lat: 0 })
-	const { dispatch, listOfCities } = useContext(WeatherListContext)
+	const { dispatch, listOfCities, options } = useContext(WeatherListContext)
 	const { fetchData } = useFetch()
 
 	const handleSubmit = (e) => {
@@ -24,6 +24,8 @@ function AddCoordinatesForm() {
 				type: 'NEW_ITEM',
 				payload: { ...obj, main: listOfCities.length === 0 },
 			})
+
+			setFormData({ lat: 0, lon: 0 })
 		})
 	}
 
@@ -56,6 +58,7 @@ function AddCoordinatesForm() {
 					</label>
 				</div>
 				<button>Add</button>
+				<div className="AddCoordinatesForm__error">{options.error}</div>
 			</form>
 		</div>
 	)

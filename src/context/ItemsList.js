@@ -2,6 +2,10 @@ import { createContext, useReducer } from 'react'
 
 const INITIAL_STATE = {
 	listOfCities: [],
+	options: {
+		isLoading: false,
+		error: null,
+	},
 }
 
 export const WeatherListContext = createContext(INITIAL_STATE)
@@ -14,9 +18,22 @@ const addNewItem = (state, action) => {
 	if (
 		(index === -1 && state.listOfCities.length > 0) ||
 		(action.payload.cityName !== 'Shuzenji' && state.listOfCities.length === 0)
-	)
+	) {
 		newListofcities.push({ ...action.payload })
+	} else {
+		return editOptions(state, {
+			payload: {
+				optionName: 'error',
+				optionValue: 'City is already exists',
+			},
+		})
+	}
 	const newData = {
+		...state,
+		options: {
+			...state.options,
+			error: null,
+		},
 		listOfCities: [...newListofcities],
 	}
 
@@ -31,6 +48,11 @@ const removeItem = (state, action) => {
 	)
 	newListofcities.splice(index, 1)
 	const newData = {
+		...state,
+		options: {
+			...state.options,
+			error: null,
+		},
 		listOfCities: [...newListofcities],
 	}
 
@@ -43,6 +65,16 @@ const removeItem = (state, action) => {
 	return newData
 }
 
+const editOptions = (state, action) => {
+	return {
+		...state,
+		options: {
+			...state.options,
+			[action.payload.optionName]: action.payload.optionValue,
+		},
+	}
+}
+
 const ListReducer = (state, action) => {
 	switch (action.type) {
 		case 'NEW_ITEM':
@@ -51,7 +83,9 @@ const ListReducer = (state, action) => {
 			return removeItem(state, action)
 		case 'LOAD_FROM_LOCALSTORAGE':
 			const data = localStorage.getItem('userData')
-			return JSON.parse(data)
+			return { ...state, ...JSON.parse(data) }
+		case 'EDIT_OPTIONS':
+			return editOptions(state, action)
 		case 'RESET_LIST':
 			return INITIAL_STATE
 		default:
@@ -66,6 +100,7 @@ export const WeatherListContextProvider = ({ children }) => {
 		<WeatherListContext.Provider
 			value={{
 				listOfCities: state.listOfCities,
+				options: state.options,
 				dispatch,
 			}}
 		>
