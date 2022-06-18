@@ -3,13 +3,15 @@ import './App.scss'
 import AddCoordinatesForm from './components/AddCoordinatesForm'
 import List from './components/List'
 import Loader from './components/Loader'
+import Modal from './components/Modal'
 import { WeatherListContext } from './context/ItemsList'
 
 const App = () => {
-	const { options } = useContext(WeatherListContext)
+	const { options, askForDelete } = useContext(WeatherListContext)
 	return (
 		<div className="App">
 			<Loader active={options?.isLoading} />
+			<Modal active={askForDelete?.isActive} />
 			<div className="App__wrapper">
 				<div className="App__title">Weather App</div>
 				<AddCoordinatesForm />

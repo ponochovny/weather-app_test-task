@@ -45,6 +45,16 @@ button {
 
   transition: background-color .3s ease;
 
+  &.danger {
+    background-color: #ff4554;
+    color: white;
+
+    &:hover {
+      background-color: #ff6572;
+      color: white;
+    }
+  }
+
   &:hover {
     background-color: #95faff;
     cursor: pointer;

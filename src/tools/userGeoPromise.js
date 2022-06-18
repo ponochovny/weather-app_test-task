@@ -17,6 +17,7 @@ const askGeolocation = new Promise((resolve, reject) => {
 		)
 	} else {
 		console.log('Geolocation is not supported by this browser.')
+		reject('Geolocation is not supported by this browser.')
 	}
 })
 

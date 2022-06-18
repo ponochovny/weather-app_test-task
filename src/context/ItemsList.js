@@ -2,6 +2,10 @@ import { createContext, useReducer } from 'react'
 
 const INITIAL_STATE = {
 	listOfCities: [],
+	askForDelete: {
+		isActive: false,
+		item: null,
+	},
 	options: {
 		isLoading: false,
 		error: null,
@@ -24,7 +28,7 @@ const addNewItem = (state, action) => {
 		return editOptions(state, {
 			payload: {
 				optionName: 'error',
-				optionValue: 'City is already exists',
+				optionValue: 'City is already in the list',
 			},
 		})
 	}
@@ -41,10 +45,31 @@ const addNewItem = (state, action) => {
 
 	return newData
 }
-const removeItem = (state, action) => {
+
+const closeModal = (state) => {
+	return {
+		...state,
+		askForDelete: {
+			isActive: false,
+			item: null,
+		},
+	}
+}
+
+const askForRemove = (state, action) => {
+	return {
+		...state,
+		askForDelete: {
+			isActive: true,
+			item: action.payload,
+		},
+	}
+}
+
+const removeItem = (state) => {
 	const newListofcities = [...state.listOfCities]
 	const index = newListofcities.findIndex(
-		(el) => el.cityName === action.payload.cityName
+		(el) => el.cityName === state.askForDelete.item.cityName
 	)
 	newListofcities.splice(index, 1)
 	const newData = {
@@ -52,6 +77,10 @@ const removeItem = (state, action) => {
 		options: {
 			...state.options,
 			error: null,
+		},
+		askForDelete: {
+			isActive: false,
+			item: null,
 		},
 		listOfCities: [...newListofcities],
 	}
@@ -80,12 +109,16 @@ const ListReducer = (state, action) => {
 		case 'NEW_ITEM':
 			return addNewItem(state, action)
 		case 'DELETE_ITEM':
-			return removeItem(state, action)
+			return removeItem(state)
 		case 'LOAD_FROM_LOCALSTORAGE':
 			const data = localStorage.getItem('userData')
 			return { ...state, ...JSON.parse(data) }
 		case 'EDIT_OPTIONS':
 			return editOptions(state, action)
+		case 'ASK_FOR_REMOVE':
+			return askForRemove(state, action)
+		case 'CLOSE_MODAL':
+			return closeModal(state)
 		case 'RESET_LIST':
 			return INITIAL_STATE
 		default:
@@ -101,6 +134,7 @@ export const WeatherListContextProvider = ({ children }) => {
 			value={{
 				listOfCities: state.listOfCities,
 				options: state.options,
+				askForDelete: state.askForDelete,
 				dispatch,
 			}}
 		>
