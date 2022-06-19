@@ -1,4 +1,5 @@
 import { createContext, useReducer } from 'react'
+import { actions } from '../helper/mainContext'
 
 const INITIAL_STATE = {
 	listOfCities: [],
@@ -12,7 +13,7 @@ const INITIAL_STATE = {
 	},
 }
 
-export const WeatherListContext = createContext(INITIAL_STATE)
+export const MainContext = createContext(INITIAL_STATE)
 
 const addNewItem = (state, action) => {
 	const newListofcities = [...state.listOfCities]
@@ -71,7 +72,14 @@ const removeItem = (state) => {
 	const index = newListofcities.findIndex(
 		(el) => el.cityName === state.askForDelete.item.cityName
 	)
+
 	newListofcities.splice(index, 1)
+
+	// reapply main flag to first el
+	if (state.askForDelete.item.main && newListofcities.length > 0) {
+		newListofcities[0].main = true
+	}
+
 	const newData = {
 		...state,
 		options: {
@@ -106,31 +114,31 @@ const editOptions = (state, action) => {
 
 const ListReducer = (state, action) => {
 	switch (action.type) {
-		case 'NEW_ITEM':
+		case actions.NEW_ITEM:
 			return addNewItem(state, action)
-		case 'DELETE_ITEM':
+		case actions.DELETE_ITEM:
 			return removeItem(state)
-		case 'LOAD_FROM_LOCALSTORAGE':
+		case actions.LOAD_FROM_LOCALSTORAGE:
 			const data = localStorage.getItem('userData')
 			return { ...state, ...JSON.parse(data) }
-		case 'EDIT_OPTIONS':
+		case actions.EDIT_OPTIONS:
 			return editOptions(state, action)
-		case 'ASK_FOR_REMOVE':
+		case actions.ASK_FOR_REMOVE:
 			return askForRemove(state, action)
-		case 'CLOSE_MODAL':
+		case actions.CLOSE_MODAL:
 			return closeModal(state)
-		case 'RESET_LIST':
+		case actions.RESET_LIST:
 			return INITIAL_STATE
 		default:
 			return state
 	}
 }
 
-export const WeatherListContextProvider = ({ children }) => {
+export const MainContextProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(ListReducer, INITIAL_STATE)
 
 	return (
-		<WeatherListContext.Provider
+		<MainContext.Provider
 			value={{
 				listOfCities: state.listOfCities,
 				options: state.options,
@@ -139,6 +147,6 @@ export const WeatherListContextProvider = ({ children }) => {
 			}}
 		>
 			{children}
-		</WeatherListContext.Provider>
+		</MainContext.Provider>
 	)
 }

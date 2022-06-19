@@ -4,10 +4,10 @@ import AddCoordinatesForm from './components/AddCoordinatesForm'
 import List from './components/List'
 import Loader from './components/Loader'
 import Modal from './components/Modal'
-import { WeatherListContext } from './context/ItemsList'
+import { MainContext } from './context/Main'
 
 const App = () => {
-	const { options, askForDelete } = useContext(WeatherListContext)
+	const { options, askForDelete } = useContext(MainContext)
 	return (
 		<div className="App">
 			<Loader active={options?.isLoading} />

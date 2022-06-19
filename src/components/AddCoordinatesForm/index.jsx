@@ -1,11 +1,12 @@
 import { useContext, useState } from 'react'
-import { WeatherListContext } from '../../context/ItemsList'
+import { MainContext } from '../../context/Main'
 import useFetch from '../../hooks/useFetch'
 import './index.scss'
+import { actions } from '../../helper/mainContext'
 
 function AddCoordinatesForm() {
 	const [formData, setFormData] = useState({ lon: 0, lat: 0 })
-	const { dispatch, listOfCities, options } = useContext(WeatherListContext)
+	const { dispatch, listOfCities, options } = useContext(MainContext)
 	const { fetchData } = useFetch()
 
 	const handleSubmit = (e) => {
@@ -21,7 +22,7 @@ function AddCoordinatesForm() {
 			}
 
 			dispatch({
-				type: 'NEW_ITEM',
+				type: actions.NEW_ITEM,
 				payload: { ...obj, main: listOfCities.length === 0 },
 			})
 

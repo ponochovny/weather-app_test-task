@@ -1,19 +1,20 @@
 import { useContext, useEffect, useState } from 'react'
-import { WeatherListContext } from '../../context/ItemsList'
+import { MainContext } from '../../context/Main'
 import useFetch from '../../hooks/useFetch'
 import userGeoPromise from '../../tools/userGeoPromise'
 import ListItem from '../ListItem'
 import Pagination from '../Pagination'
+import { actions } from '../../helper/mainContext'
 
 function List() {
-	const { dispatch, listOfCities } = useContext(WeatherListContext)
+	const { dispatch, listOfCities } = useContext(MainContext)
 	const { fetchData } = useFetch()
 	const [page, setPage] = useState(1)
 
 	const askAndSetCoords = async () => {
 		const localData = localStorage.getItem('userData')
 		if (localData) {
-			return dispatch({ type: 'LOAD_FROM_LOCALSTORAGE' })
+			return dispatch({ type: actions.LOAD_FROM_LOCALSTORAGE })
 		}
 
 		userGeoPromise
@@ -29,7 +30,7 @@ function List() {
 					description: data.weather[0].description,
 				}
 
-				dispatch({ type: 'NEW_ITEM', payload: { ...obj, main: true } })
+				dispatch({ type: actions.NEW_ITEM, payload: { ...obj, main: true } })
 			})
 			.catch((_) => {
 				localStorage.removeItem('currentLocationData')

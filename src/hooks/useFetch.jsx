@@ -1,13 +1,14 @@
 import { useContext } from 'react'
-import { WeatherListContext } from '../context/ItemsList'
+import { MainContext } from '../context/Main'
+import { actions } from '../helper/mainContext'
 
 const useFetch = () => {
 	const MAIN_URL = 'https://fcc-weather-api.glitch.me/api/current'
-	const { dispatch } = useContext(WeatherListContext)
+	const { dispatch } = useContext(MainContext)
 
 	const fetchData = async (coords) => {
 		dispatch({
-			type: 'EDIT_OPTIONS',
+			type: actions.EDIT_OPTIONS,
 			payload: {
 				optionName: 'isLoading',
 				optionValue: true,
@@ -16,7 +17,7 @@ const useFetch = () => {
 		try {
 			const res = await fetch(`${MAIN_URL}?lat=${coords.lat}&lon=${coords.lon}`)
 			dispatch({
-				type: 'EDIT_OPTIONS',
+				type: actions.EDIT_OPTIONS,
 				payload: {
 					optionName: 'isLoading',
 					optionValue: false,
@@ -27,7 +28,7 @@ const useFetch = () => {
 			console.log('Fetch error:', error)
 
 			dispatch({
-				type: 'EDIT_OPTIONS',
+				type: actions.EDIT_OPTIONS,
 				payload: {
 					optionName: 'error',
 					optionValue: error.message,
@@ -36,7 +37,7 @@ const useFetch = () => {
 		}
 
 		dispatch({
-			type: 'EDIT_OPTIONS',
+			type: actions.EDIT_OPTIONS,
 			payload: {
 				optionName: 'isLoading',
 				optionValue: false,

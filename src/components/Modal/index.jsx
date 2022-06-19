@@ -1,12 +1,13 @@
 import './index.scss'
 import React, { useContext } from 'react'
-import { WeatherListContext } from '../../context/ItemsList'
+import { MainContext } from '../../context/Main'
+import { actions } from '../../helper/mainContext'
 
 const Modal = React.memo(({ active }) => {
-	const { dispatch } = useContext(WeatherListContext)
+	const { dispatch } = useContext(MainContext)
 
-	const handleDeleteItem = () => dispatch({ type: 'DELETE_ITEM' })
-	const handleCloseModal = () => dispatch({ type: 'CLOSE_MODAL' })
+	const handleDeleteItem = () => dispatch({ type: actions.DELETE_ITEM })
+	const handleCloseModal = () => dispatch({ type: actions.CLOSE_MODAL })
 
 	return (
 		<div className={`Modal ${active ? 'active' : ''}`}>

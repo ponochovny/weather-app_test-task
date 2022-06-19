@@ -1,12 +1,13 @@
 import { useContext } from 'react'
-import { WeatherListContext } from '../../context/ItemsList'
+import { MainContext } from '../../context/Main'
 import './index.scss'
+import { actions } from '../../helper/mainContext'
 
 const ListItem = (props) => {
 	const { item, index } = props
-	const { dispatch } = useContext(WeatherListContext)
+	const { dispatch } = useContext(MainContext)
 	const handleDelete = () =>
-		dispatch({ type: 'ASK_FOR_REMOVE', payload: { ...item } })
+		dispatch({ type: actions.ASK_FOR_REMOVE, payload: { ...item } })
 	return (
 		<div className={`ListItem ${item.main ? 'active' : ''} ${index}`}>
 			<div className="ListItem__icon">
