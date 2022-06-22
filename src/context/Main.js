@@ -16,6 +16,13 @@ const INITIAL_STATE = {
 export const MainContext = createContext(INITIAL_STATE)
 
 const addNewItem = (state, action) => {
+	// API bug fix
+	if (action.payload.cityName === 'Shuzenji') {
+		localStorage.setItem('userData', JSON.stringify(state))
+		return state
+	}
+	//
+
 	const newListofcities = [...state.listOfCities]
 	const index = newListofcities.findIndex(
 		(el) => el.cityName === action.payload.cityName

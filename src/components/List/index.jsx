@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { MainContext } from '../../context/Main'
 import useFetch from '../../hooks/useFetch'
 import userGeoPromise from '../../tools/userGeoPromise'
@@ -6,14 +6,16 @@ import ListItem from '../ListItem'
 import Pagination from '../Pagination'
 import { actions } from '../../helper/mainContext'
 
-function List() {
+const List = () => {
 	const { dispatch, listOfCities } = useContext(MainContext)
 	const { fetchData } = useFetch()
 	const [page, setPage] = useState(1)
 
 	const askAndSetCoords = async () => {
 		const localData = localStorage.getItem('userData')
-		if (localData) {
+		const parsedData = JSON.parse(localData)
+
+		if (localData && parsedData.length > 0) {
 			return dispatch({ type: actions.LOAD_FROM_LOCALSTORAGE })
 		}
 
@@ -76,4 +78,4 @@ function List() {
 	)
 }
 
-export default List
+export default React.memo(List)
